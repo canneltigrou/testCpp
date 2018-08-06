@@ -12,9 +12,9 @@ public:
 	virtual ~Leg();
 
 	// Reimplement the virtual methods.
-	virtual void formatHeader(std::string& header, std::string const& prefix);
+	//virtual void formatHeader(std::string& header, std::string const& prefix);
 	virtual void getCurrentValues(std::vector<int>& values);
-	virtual void compute(int const timeMs);
+	//virtual void compute(int const timeMs);
 
 private:
 	// A leg is only an aggregation of motors.

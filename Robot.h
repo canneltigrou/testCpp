@@ -12,7 +12,6 @@ public:
 	// Reimplement virtual methods.
 	virtual void compute(int const timeMs);
 	virtual void getCurrentValues(std::vector<int>& values);
-	virtual void formatHeader(std::string& header, std::string const& prefix);
 
 	virtual ~Robot();
 private:
@@ -22,7 +21,6 @@ private:
 	int batteryLevel_;
 	int positionX_;
 	int positionY_;
-
 	// Complex objects that are also derived from AbstractLogObject.
 	Leg leftLeg_;
 	Leg rightLeg_;

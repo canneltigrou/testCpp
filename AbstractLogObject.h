@@ -30,13 +30,14 @@ public:
 	/// \details For each value that has been registered using registerValue(),
 	///          it will append in the header string "prefix.name.field\t".
 	///          It should be called successively on the same string.
+	///			 Then it will be recursive on each complex objects of the descendant class.
 	///          A derived class can reimplement it to perform custom operations.
 	///
 	/// \param[out] header: the resulting header, tab separated values.
 	/// \param[in] prefix: the prefix that would be printed before each values to log.
 	/// (Caution : prefix can be "", but if not it has to finish with a dot "." !)
 	///////////////////////////////////////////////////////////////////////////////////////
-	virtual void formatHeader(std::string &header, std::string const& prefix);
+	virtual const void formatHeader(std::string &header, std::string const& prefix);
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Get the current values of each data that has been registered using addField()
@@ -51,16 +52,34 @@ public:
 	virtual void getCurrentValues(std::vector<int>& values);
 
 	///////////////////////////////////////////////////////////////////////////////////////
+	/// \brief   call the getCurrentValues method for each attributes
+	///
+	/// \param[out] values: the values to log.
+	///////////////////////////////////////////////////////////////////////////////////////
+	virtual void getCurrentAttributesValues(std::vector<int>& values);
+
+	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Run a simulation step of the simulator.
 	///
-	/// \details This method is pure virtual to make this class Abstract.
+	/// \details
 	///          Each derived class must call this method at each step of the simulation.
 	///          Basically it should update attributes of the class and then log the new values
 	///          of these attributes using logValue().
+	///			 If this method isn't redefine, it will just call the method computeAttributes
 	///
 	/// \param[in] timeMs: The current simulation step, in milliseconds.
 	///////////////////////////////////////////////////////////////////////////////////////
-	virtual void compute(int const timeMs) = 0;
+	virtual void compute(int const timeMs);
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	/// \brief   Run a simulation step of the simulator.
+	///
+	/// \details It is called to compute the attributes of the class.
+	///			 It is called during the compute method.
+	///
+	/// \param[in] timeMs: The current simulation step, in milliseconds.
+	///////////////////////////////////////////////////////////////////////////////////////
+	virtual void computeAttributes(int const timeMs);
 
 protected:
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -90,6 +109,10 @@ private:
 
 protected:
 	std::string const name_;  ///< Name of the object.
+	std::set<AbstractLogObject*> complexObects_ ;  ///< Complex objects from
+																/// the descendant class.
+
+
 };
 
 #endif /* ABSTRACTLOGOBJECT_H_ */

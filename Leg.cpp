@@ -6,26 +6,22 @@ Leg::Leg(std::string const& name)
 	  foot_("Foot"),
 	  knee_("Knee")
 {
+	complexObects_.insert(&foot_);
+	complexObects_.insert(&knee_);
 }
 
+/*
 void Leg::compute(int const timeMs)
 {
 	foot_.compute(timeMs);
 	knee_.compute(timeMs);
 }
+*/
 
-
-void Leg::formatHeader(std::string& header, std::string const& prefix)
-{
-	std::string prefix2 = prefix + name_ + ".";
-	foot_.formatHeader(header, prefix2);
-	knee_.formatHeader(header, prefix2);
-}
 
 void Leg::getCurrentValues(std::vector<int>& values)
 {
-	foot_.getCurrentValues(values);
-	knee_.getCurrentValues(values);
+	getCurrentAttributesValues(values);
 }
 
 Leg::~Leg()

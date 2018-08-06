@@ -6,7 +6,6 @@ Motor::Motor(std::string const& name)
 	  speed_(0),
 	  torque_(0)
 {
-
 	// Register the values we want to log.
 	// Allows to call later logValue("Position", position_); for example.
 	registerValue("Position");

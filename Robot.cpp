@@ -11,16 +11,11 @@ Robot::Robot(std::string const& name)
 	registerValue("BatteryLevel");
 	registerValue("PositionX");
 	registerValue("PositionY");
+	complexObects_.insert(&leftLeg_);
+	complexObects_.insert(&rightLeg_);
+
 }
 
-
-void Robot::formatHeader(std::string& header, std::string const& prefix)
-{
-	AbstractLogObject::formatHeader(header, prefix);
-	std::string prefix2 = prefix + name_ + ".";
-	leftLeg_.formatHeader(header , prefix2);
-	rightLeg_.formatHeader(header , prefix2);
-}
 
 void Robot::getCurrentValues(std::vector<int>& values)
 {
@@ -28,8 +23,7 @@ void Robot::getCurrentValues(std::vector<int>& values)
 	AbstractLogObject::getCurrentValues(values);
 
 	// Then call the method for complex objects.
-	leftLeg_.getCurrentValues(values);
-	rightLeg_.getCurrentValues(values);
+	getCurrentAttributesValues(values);
 }
 
 // Do some computations to have some data to log.
@@ -52,8 +46,7 @@ void Robot::compute(int const timeMs)
 	positionY_ = -timeMs;
 
 	// Call compute for private members (not ideal, see question 2).
-	leftLeg_.compute(timeMs);
-	rightLeg_.compute(timeMs);
+	computeAttributes(timeMs);
 
 	// Once values are updated, update the log.
 	logValue("BatteryLevel", batteryLevel_);
