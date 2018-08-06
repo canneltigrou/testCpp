@@ -18,7 +18,7 @@ int main(void)
 	Robot r("JohnyFive");
 
 	std::string header("Time\t");
-	r.formatHeader(header);
+	r.formatHeader(header, "");
 	std::cout << header << std::endl;
 
 	for (int timeStep = 0; timeStep < 1000; timeStep++)

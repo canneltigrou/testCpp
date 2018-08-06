@@ -12,7 +12,7 @@ public:
 	// Reimplement virtual methods.
 	virtual void compute(int const timeMs);
 	virtual void getCurrentValues(std::vector<int>& values);
-	virtual void formatHeader(std::string& header);
+	virtual void formatHeader(std::string& header, std::string const& prefix);
 
 	virtual ~Robot();
 private:

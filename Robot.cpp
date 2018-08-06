@@ -13,11 +13,13 @@ Robot::Robot(std::string const& name)
 	registerValue("PositionY");
 }
 
-void Robot::formatHeader(std::string& header)
+
+void Robot::formatHeader(std::string& header, std::string const& prefix)
 {
-	AbstractLogObject::formatHeader(header);
-	leftLeg_.formatHeader(header);
-	rightLeg_.formatHeader(header);
+	AbstractLogObject::formatHeader(header, prefix);
+	std::string prefix2 = prefix + name_ + ".";
+	leftLeg_.formatHeader(header , prefix2);
+	rightLeg_.formatHeader(header , prefix2);
 }
 
 void Robot::getCurrentValues(std::vector<int>& values)

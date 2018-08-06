@@ -14,10 +14,12 @@ void Leg::compute(int const timeMs)
 	knee_.compute(timeMs);
 }
 
-void Leg::formatHeader(std::string& header)
+
+void Leg::formatHeader(std::string& header, std::string const& prefix)
 {
-	foot_.formatHeader(header);
-	knee_.formatHeader(header);
+	std::string prefix2 = prefix + name_ + ".";
+	foot_.formatHeader(header, prefix2);
+	knee_.formatHeader(header, prefix2);
 }
 
 void Leg::getCurrentValues(std::vector<int>& values)

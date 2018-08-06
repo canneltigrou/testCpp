@@ -24,16 +24,19 @@ public:
 	///////////////////////////////////////////////////////////////////////////////////////
 	explicit AbstractLogObject(std::string const& name);
 
+
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief format the column headers for each values to log
 	/// \details For each value that has been registered using registerValue(),
-	///          it will append in the header string "name.field\t".
+	///          it will append in the header string "prefix.name.field\t".
 	///          It should be called successively on the same string.
 	///          A derived class can reimplement it to perform custom operations.
 	///
 	/// \param[out] header: the resulting header, tab separated values.
+	/// \param[in] prefix: the prefix that would be printed before each values to log.
+	/// (Caution : prefix can be "", but if not it has to finish with a dot "." !)
 	///////////////////////////////////////////////////////////////////////////////////////
-	virtual void formatHeader(std::string &header);
+	virtual void formatHeader(std::string &header, std::string const& prefix);
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Get the current values of each data that has been registered using addField()
@@ -82,10 +85,11 @@ protected:
 	virtual ~AbstractLogObject();
 
 private:
-	std::string const name_;  ///< Name of the object.
-
 	std::set<std::string> headers_;  ///< List of the headers of the variables to log.
 	std::map<std::string, int> values_;  ///< Current values of the variables to log.
+
+protected:
+	std::string const name_;  ///< Name of the object.
 };
 
 #endif /* ABSTRACTLOGOBJECT_H_ */

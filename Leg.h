@@ -12,7 +12,7 @@ public:
 	virtual ~Leg();
 
 	// Reimplement the virtual methods.
-	virtual void formatHeader(std::string& header);
+	virtual void formatHeader(std::string& header, std::string const& prefix);
 	virtual void getCurrentValues(std::vector<int>& values);
 	virtual void compute(int const timeMs);
 

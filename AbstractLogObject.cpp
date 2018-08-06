@@ -10,13 +10,14 @@ AbstractLogObject::AbstractLogObject(std::string const& name)
 {
 }
 
-void AbstractLogObject::formatHeader(std::string &header)
+
+void AbstractLogObject::formatHeader(std::string &header, std::string const& prefix)
 {
 	std::string result("");
 
 	for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
 	{
-		std::string tmp = name_ + "." + *it + "\t";
+		std::string tmp = prefix + name_ + "." + *it + "\t";
 		header += tmp;
 	}
 }
