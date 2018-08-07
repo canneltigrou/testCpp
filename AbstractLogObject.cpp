@@ -34,18 +34,16 @@ void AbstractLogObject::registerValue(std::string const& name)
 	headers_.insert(name);
 }
 
-template <typename T>
-void AbstractLogObject::logValue(std::string const& field, T const value)
+void AbstractLogObject::logValue(std::string const& field, int const value)
 {
 	values_[field] = value;
 }
 
-template <typename T>
-void AbstractLogObject::getCurrentValues(std::vector<T>& values)
+void AbstractLogObject::getCurrentValues(std::vector<int>& values)
 {
 	for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
 	{
-		T val = values_[*it];
+		int val = values_[*it];
 		values.push_back(val);
 	}
 }
@@ -61,8 +59,7 @@ void AbstractLogObject::computeAttributes(int const timeMs)
 				(*it)->compute(timeMs);
 }
 
-template <typename T>
-void AbstractLogObject::getCurrentAttributesValues(std::vector<T>& values)
+void AbstractLogObject::getCurrentAttributesValues(std::vector<int>& values)
 {
 	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
 		(*it)->getCurrentValues(values);

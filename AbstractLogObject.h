@@ -49,16 +49,14 @@ public:
 	///
 	/// \param[out] values: the values to log.
 	///////////////////////////////////////////////////////////////////////////////////////
-	template <typename T>
-	virtual void getCurrentValues(std::vector<T>& values);
+	virtual void getCurrentValues(std::vector<int>& values);
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   call the getCurrentValues method for each attributes
 	///
 	/// \param[out] values: the values to log.
 	///////////////////////////////////////////////////////////////////////////////////////
-	template <typename T>
-	virtual void getCurrentAttributesValues(std::vector<T>& values);
+	virtual void getCurrentAttributesValues(std::vector<int>& values);
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Run a simulation step of the simulator.
@@ -101,15 +99,13 @@ protected:
 	///
 	/// \param[in] name: The name of the value to register.
 	///////////////////////////////////////////////////////////////////////////////////////
-	template <typename T>
-	void logValue(std::string const& field, T const value);
+	void logValue(std::string const& field, int const value);
 
 	virtual ~AbstractLogObject();
 
 private:
 	std::set<std::string> headers_;  ///< List of the headers of the variables to log.
-	template <typename T>
-	std::map<std::string, T> values_;  ///< Current values of the variables to log.
+	std::map<std::string, int> values_;  ///< Current values of the variables to log.
 
 protected:
 	std::string const name_;  ///< Name of the object.
