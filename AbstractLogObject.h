@@ -99,13 +99,25 @@ protected:
 	///
 	/// \param[in] name: The name of the value to register.
 	///////////////////////////////////////////////////////////////////////////////////////
-	void logValue(std::string const& field, int const value);
+	template <typename T>
+	void logValue(std::string const& field, T const value);
 
 	virtual ~AbstractLogObject();
 
 private:
 	std::set<std::string> headers_;  ///< List of the headers of the variables to log.
-	std::map<std::string, int> values_;  ///< Current values of the variables to log.
+	std::map<std::string, int> valuesInt_;  ///< Current values of the variables to log.
+	std::map<std::string, bool> valuesBool_;  ///< Current values of the variables to log.
+	std::map<std::string, double> valuesDouble_;  ///< Current values of the variables to log.
+	std::map<std::string, float> valuesFloat_;  ///< Current values of the variables to log.
+	std::map<std::string, std::string> valuesString_;  ///< Current values of the variables to log.
+
+
+	template <typename T>
+	std::map<std::string, T> AttributeLied(T const value);
+
+
+
 
 protected:
 	std::string const name_;  ///< Name of the object.

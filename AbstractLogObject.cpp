@@ -1,5 +1,6 @@
 #include "AbstractLogObject.h"
 #include <iostream>
+#include <typeinfo>
 
 AbstractLogObject::~AbstractLogObject()
 {
@@ -34,16 +35,33 @@ void AbstractLogObject::registerValue(std::string const& name)
 	headers_.insert(name);
 }
 
-void AbstractLogObject::logValue(std::string const& field, int const value)
+template <typename T>
+std::map<std::string, T> AbstractLogObject::AttributeLied(T const value)
 {
-	values_[field] = value;
+	if (typeid(value) == typeid(int))
+		return valuesInt_;
+	if (typeid(value) == typeid(float))
+		return valuesFloat_ ;
+	if (typeid(value) == typeid(std::string))
+		return valuesString_;
+	if (typeid(value) == typeid(bool))
+		return valuesBool_;
+	return valuesDouble_;
+}
+
+
+template <typename T>
+void AbstractLogObject::logValue(std::string const& field, T const value)
+{
+	AttributeLied(value)[field] = value;
+	//values_[field] = value;
 }
 
 void AbstractLogObject::getCurrentValues(std::vector<int>& values)
 {
 	for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
 	{
-		int val = values_[*it];
+		int val = valuesInt_[*it];
 		values.push_back(val);
 	}
 }
