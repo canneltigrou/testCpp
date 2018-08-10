@@ -18,6 +18,7 @@
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.base.8810237.1030878453" name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.base.1974438622" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.PE" id="cdt.managedbuild.target.gnu.platform.mingw.base.346197352" name="Debug Platform" osList="win32" superClass="cdt.managedbuild.target.gnu.platform.mingw.base"/>
+
 							<builder buildPath="C:\Users\canne\Documents\test_cpp\git\testCpp" command="make" id="cdt.managedbuild.builder.gnu.cross.575586200" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.base.669877855" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.base">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.463231150" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -32,6 +33,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.base.2140551423" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base.412244160" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base">
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1145369593" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
+
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
