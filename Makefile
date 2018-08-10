@@ -1,4 +1,4 @@
-CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
+CXXFLAGS =	-O2 -g -Wall -std=c++0x -fmessage-length=0
 
 OBJS =		Main.o AbstractLogObject.o Robot.o Motor.o Leg.o
 
