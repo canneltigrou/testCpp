@@ -24,6 +24,11 @@ private:
 	// Complex objects that are also derived from AbstractLogObject.
 	Leg leftLeg_;
 	Leg rightLeg_;
+
+	// computation of each internal variables
+	void computePositionY(int const timeMs);
+	void computePositionX(int const timeMs);
+	void computeBatteryLevel(int const timeMs);
 };
 
 #endif /* ROBOT_H_ */

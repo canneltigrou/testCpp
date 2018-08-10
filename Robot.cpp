@@ -1,5 +1,9 @@
 #include "Robot.h"
 
+#define NONE 0
+#define SOME 1
+#define ALL 2
+
 Robot::Robot(std::string const& name)
 	: AbstractLogObject(name),
 	  batteryLevel_(MAX_VOLTAGE),
@@ -8,9 +12,10 @@ Robot::Robot(std::string const& name)
 	  leftLeg_("LeftLeg"),
 	  rightLeg_("RightLeg")
 {
-	registerValue("BatteryLevel");
-	registerValue("PositionX");
-	registerValue("PositionY");
+	// I suppose all these attributes are optional.
+	registerValue("BatteryLevel", true);
+	registerValue("PositionX", false);
+	registerValue("PositionY", false);
 	complexObects_.insert(&leftLeg_);
 	complexObects_.insert(&rightLeg_);
 
@@ -26,8 +31,8 @@ void Robot::getCurrentValues(std::vector<int>& values)
 	getCurrentAttributesValues(values);
 }
 
-// Do some computations to have some data to log.
-void Robot::compute(int const timeMs)
+
+void Robot::computeBatteryLevel(int const timeMs)
 {
 	// Simulate a discharge, unit is mV.
 	static int const DISCHARGE = 10; // Ratio in mv/s;
@@ -40,18 +45,34 @@ void Robot::compute(int const timeMs)
 	{
 		batteryLevel_ = 0;
 	}
+	logValue("BatteryLevel", batteryLevel_);
+}
 
-	// Set non null data.
+void Robot::computePositionX(int const timeMs)
+{
 	positionX_ = timeMs;
+	logValue("PositionX", positionX_);
+}
+
+void Robot::computePositionY(int const timeMs)
+{
 	positionY_ = -timeMs;
+	logValue("PositionY", positionY_);
+}
+
+
+// Do some computations to have some data to log.
+void Robot::compute(int const timeMs)
+{
+	if(!optional_["BatteryLevel"])
+		computeBatteryLevel(timeMs);
+	if(!optional_["PositionX"])
+		computePositionX(timeMs);
+	if(!optional_["PositionY"])
+		computePositionY(timeMs);
 
 	// Call compute for private members (not ideal, see question 2).
 	computeAttributes(timeMs);
-
-	// Once values are updated, update the log.
-	logValue("BatteryLevel", batteryLevel_);
-	logValue("PositionX", positionX_);
-	logValue("PositionY", positionY_);
 }
 
 Robot::~Robot()

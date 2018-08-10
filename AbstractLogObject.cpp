@@ -1,6 +1,10 @@
 #include "AbstractLogObject.h"
 #include <iostream>
 
+#define NONE 0
+#define SOME 1
+#define ALL 2
+
 AbstractLogObject::~AbstractLogObject()
 {
 }
@@ -18,20 +22,23 @@ void const AbstractLogObject::formatHeader(std::string &header, std::string cons
 
 	for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
 	{
-		std::string tmp = prefix + name_ + "." + *it + "\t";
-		header += tmp;
+		if(isToLog_[*it])
+		{
+			std::string tmp = prefix + name_ + "." + *it + "\t";
+			header += tmp;
+		}
 	}
 
 	// Then call the method for complex objects of the descendant class.
 	std::string const prefix2 = prefix + name_+ '.';
 	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
 		(*it)->formatHeader(header, prefix2);
-
 }
 
-void AbstractLogObject::registerValue(std::string const& name)
+void AbstractLogObject::registerValue(std::string const& name, bool isOptional)
 {
 	headers_.insert(name);
+	optional_[name] = isOptional;
 }
 
 void AbstractLogObject::logValue(std::string const& field, int const value)
@@ -43,8 +50,11 @@ void AbstractLogObject::getCurrentValues(std::vector<int>& values)
 {
 	for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
 	{
-		int val = values_[*it];
-		values.push_back(val);
+		if(isToLog_[*it])
+		{
+			int val = values_[*it];
+			values.push_back(val);
+		}
 	}
 }
 
@@ -64,3 +74,51 @@ void AbstractLogObject::getCurrentAttributesValues(std::vector<int>& values)
 	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
 		(*it)->getCurrentValues(values);
 }
+
+void AbstractLogObject::initialiseIsToLog(int const option)
+{
+	if(option != SOME)
+	{
+		bool chooseAll = true;
+		if(option == NONE)
+			chooseAll = false;
+
+		for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
+		{
+			isToLog_[*it] = (!optional_[*it]) | chooseAll;
+			if(chooseAll)
+				optional_[*it] = false; // an attribute printed can't be optional anymore.
+		}
+	}
+	else // we will ask the user which attributes he want to log
+	{
+		std::string str;
+		std::cout<<"\nWe actually are in " + name_+" : please tell 'y' if you want to log these variables or 'n' if not.";
+		for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
+		{
+			bool isOK = false;
+			while(!isOK)
+			{
+				std::cout<< "\n" + name_ + "." + *it + " : ";
+				std::getline(std::cin, str);
+				if(str == std::string("y") )
+				{
+					isOK = true;
+					isToLog_[*it] = true;
+					optional_[*it] = false; // an attribute printed can't be optional anymore.
+				}
+				else
+					if(str == std::string("n"))
+					{
+						isOK = true;
+						isToLog_[*it] = false;
+					}
+					else
+						std::cout<<"Error : I couldn't understand. Retry. (y for yes, n for no)";
+			}
+		}
+	}
+	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
+			(*it)->initialiseIsToLog(option);
+}
+

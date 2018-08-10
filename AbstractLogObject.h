@@ -25,8 +25,9 @@ public:
 	explicit AbstractLogObject(std::string const& name);
 
 
+
 	///////////////////////////////////////////////////////////////////////////////////////
-	/// \brief format the column headers for each values to log
+	/// \brief format the column headers for each values that have to be logged
 	/// \details For each value that has been registered using registerValue(),
 	///          it will append in the header string "prefix.name.field\t".
 	///          It should be called successively on the same string.
@@ -41,8 +42,10 @@ public:
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Get the current values of each data that has been registered using addField()
+	///			AND that has to be printed
 	///
 	/// \details For each value that has been registered using addField(),
+	///			 AND THAT HAS TO BE PRINTED
 	///          it will append in the vector the current value of the data.
 	///          The current value is changed only after logValue() has been called.
 	///          A derived class can reimplement it to perform custom operations.
@@ -81,6 +84,18 @@ public:
 	///////////////////////////////////////////////////////////////////////////////////////
 	virtual void computeAttributes(int const timeMs);
 
+	///////////////////////////////////////////////////////////////////////////////////////
+	/// \brief   Initialise the maps isToLog_ and optional_ in fonction of the option.
+	///
+	/// \details It is called by the main with the chosen option.
+	///
+	/// \param[in] option: the option chosen
+	///////////////////////////////////////////////////////////////////////////////////////
+	virtual void initialiseIsToLog(int const option);
+
+
+
+
 protected:
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Register a name of a variable to be logged.
@@ -89,7 +104,7 @@ protected:
 	///
 	/// \param[in] name: The name of the variable to register.
 	///////////////////////////////////////////////////////////////////////////////////////
-	void registerValue(std::string const& name);
+	void registerValue(std::string const& name, bool isOptional);
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	/// \brief   Update the value of a variable to log
@@ -107,12 +122,16 @@ private:
 	std::set<std::string> headers_;  ///< List of the headers of the variables to log.
 	std::map<std::string, int> values_;  ///< Current values of the variables to log.
 
+
 protected:
 	std::string const name_;  ///< Name of the object.
 	std::set<AbstractLogObject*> complexObects_ ;  ///< Complex objects from
 																/// the descendant class.
-
-
+	std::map<std::string, bool> optional_;	///< True if the variables are optional.
+	std::map<std::string, bool> isToLog_;	///< True if the values must be log.
+				/// For this variable, the value for a key not optional is necessary 'True'.
+				/// So it was not necessary to set the value for all the variables,
+				/// but I prefer inform for all the variables in order to check only in this map.
 };
 
 #endif /* ABSTRACTLOGOBJECT_H_ */

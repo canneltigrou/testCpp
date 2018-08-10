@@ -17,6 +17,12 @@ private:
 	int position_;
 	int speed_;
 	int torque_;
+
+	// the computation of this private attributes
+	void computeTorque(int const timeMS);
+	void computeSpeed(int const timeMS);
+	void computePosition(int const timeMS);
+
 };
 
 #endif /* MOTOR_H_ */

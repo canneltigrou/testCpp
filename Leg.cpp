@@ -10,14 +10,6 @@ Leg::Leg(std::string const& name)
 	complexObects_.insert(&knee_);
 }
 
-/*
-void Leg::compute(int const timeMs)
-{
-	foot_.compute(timeMs);
-	knee_.compute(timeMs);
-}
-*/
-
 
 void Leg::getCurrentValues(std::vector<int>& values)
 {

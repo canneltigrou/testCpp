@@ -38,6 +38,9 @@ Then to run it:
 
 It should output the tab separated values as expected.
 
+It has been changed since the question 4 :
+now, usage is : './simulator [-none | -all | -some | -help]
+
 ## Your task
 
 You will need to update the code several times.
@@ -103,7 +106,7 @@ In a real scenario, we can have a lot of values to log, and we don't always need
 Basically the sensor values are important to keep, but the result of algorithms that are based on
 these sensor values can be reconstructed afterwards.
 Change the AbstractClass to add a flag for each value saying if it's optional or not.
-Add a way to tell the programm to enable or disable the optional values.
+Add a way to tell the program to enable or disable the optional values.
 
 It should be set before the simulation starts, because once the headers are generated we won't be able to
 remove them or the data won't make sense. So it is set once and never changed after.
