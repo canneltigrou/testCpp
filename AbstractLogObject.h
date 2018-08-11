@@ -93,6 +93,7 @@ public:
 	///////////////////////////////////////////////////////////////////////////////////////
 	virtual void initialiseIsToLog(int const option);
 
+	void findingHeaders(std::string const& prefix, std::vector<std::string> &valuesLoad_ , std::vector<int> &tmpVect_);
 
 
 
@@ -117,8 +118,6 @@ protected:
 	void logValue(std::string const& field, int const value);
 
 
-
-
 	virtual ~AbstractLogObject();
 
 private:
@@ -128,15 +127,13 @@ private:
 
 protected:
 	std::string const name_;  ///< Name of the object.
-	std::set<AbstractLogObject*> complexObects_ ;  ///< Complex objects from
+	std::set<AbstractLogObject*> complexObjects_ ;  ///< Complex objects from
 																/// the descendant class.
 	std::map<std::string, bool> optional_;	///< True if the variables are optional.
 	std::map<std::string, bool> isToLog_;	///< True if the values must be log.
 				/// For this variable, the value for a key not optional is necessary 'True'.
 				/// So it was not necessary to set the value for all the variables,
 				/// but I prefer inform for all the variables in order to check only in this map.
-	//std::map<int , std::map<std::string,int>> valuesLogged_;  // contient les valeurs non optionnelles
-				/// qui sont déjà présentes dans le fichier donné en paramètre, en fonction du temps.
 };
 
 #endif /* ABSTRACTLOGOBJECT_H_ */
