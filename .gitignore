@@ -1,1 +1,4 @@
 /Default/
+*.exe
+*.o
+*.csv
