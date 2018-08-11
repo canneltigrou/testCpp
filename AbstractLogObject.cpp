@@ -1,5 +1,7 @@
 #include "AbstractLogObject.h"
 #include <iostream>
+#include <algorithm>
+#include <string.h>
 
 #define NONE 0
 #define SOME 1
@@ -31,7 +33,7 @@ void const AbstractLogObject::formatHeader(std::string &header, std::string cons
 
 	// Then call the method for complex objects of the descendant class.
 	std::string const prefix2 = prefix + name_+ '.';
-	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
+	for (std::set<AbstractLogObject*>::const_iterator it = complexObjects_.begin(); it != complexObjects_.end(); it++)
 		(*it)->formatHeader(header, prefix2);
 }
 
@@ -65,13 +67,13 @@ void AbstractLogObject::compute(int const timeMs)
 
 void AbstractLogObject::computeAttributes(int const timeMs)
 {
-	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
+	for (std::set<AbstractLogObject*>::const_iterator it = complexObjects_.begin(); it != complexObjects_.end(); it++)
 				(*it)->compute(timeMs);
 }
 
 void AbstractLogObject::getCurrentAttributesValues(std::vector<int>& values)
 {
-	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
+	for (std::set<AbstractLogObject*>::const_iterator it = complexObjects_.begin(); it != complexObjects_.end(); it++)
 		(*it)->getCurrentValues(values);
 }
 
@@ -118,7 +120,39 @@ void AbstractLogObject::initialiseIsToLog(int const option)
 			}
 		}
 	}
-	for (std::set<AbstractLogObject*>::const_iterator it = complexObects_.begin(); it != complexObects_.end(); it++)
+	for (std::set<AbstractLogObject*>::const_iterator it = complexObjects_.begin(); it != complexObjects_.end(); it++)
 			(*it)->initialiseIsToLog(option);
 }
+
+
+void AbstractLogObject::findingHeaders(std::string const& prefix, std::vector<std::string> &valuesLoad_ , std::vector<int> &tmpVect_)
+{
+
+	// log our private int values of the AbstractLogObject's attributes
+	std::string result("");
+	for (std::set<std::string>::const_iterator it = headers_.begin(); it != headers_.end(); it++)
+	{
+		std::string tmp = prefix + name_ + "." + *it;
+
+		bool found = false;
+		for (unsigned int i = 0; !found && i < valuesLoad_.size(); i++)
+		{
+			if (valuesLoad_[i] == tmp)
+			{
+				optional_[*it] = true;
+				values_[*it] = tmpVect_[i];
+			}
+		}
+	}
+
+	// Then call the method for complex objects of the descendant class.
+	std::string const prefix2 = prefix + name_+ '.';
+	for (std::set<AbstractLogObject*>::const_iterator it = complexObjects_.begin(); it != complexObjects_.end(); it++)
+		(*it)->findingHeaders(prefix2, valuesLoad_ , tmpVect_);
+
+
+
+}
+
+
 

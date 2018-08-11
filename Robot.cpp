@@ -16,8 +16,8 @@ Robot::Robot(std::string const& name)
 	registerValue("BatteryLevel", true);
 	registerValue("PositionX", false);
 	registerValue("PositionY", false);
-	complexObects_.insert(&leftLeg_);
-	complexObects_.insert(&rightLeg_);
+	complexObjects_.insert(&leftLeg_);
+	complexObjects_.insert(&rightLeg_);
 
 }
 

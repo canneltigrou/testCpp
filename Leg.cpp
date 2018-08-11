@@ -6,8 +6,8 @@ Leg::Leg(std::string const& name)
 	  foot_("Foot"),
 	  knee_("Knee")
 {
-	complexObects_.insert(&foot_);
-	complexObects_.insert(&knee_);
+	complexObjects_.insert(&foot_);
+	complexObjects_.insert(&knee_);
 }
 
 

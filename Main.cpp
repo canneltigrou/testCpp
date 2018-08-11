@@ -4,6 +4,7 @@
 #include <fstream>
 #include <list>
 #include <string>
+#include <sstream>
 
 #define NONE 0
 #define SOME 1
@@ -42,7 +43,7 @@ void printError()
 void printHelp()
 {
 	std::cout <<
-			"Usage : simulator [-all | -some | -none | -help][-save file_name]\n"
+			"Usage : simulator [-all | -some | -none | -help][-save file_name][-load file_name2]\n"
 			"no tag : it will do the same than with the tag -nothing \n"
 			" -all : all the variables will be computed and printed \n"
 			" -some : only some variables will be printed. The program will ask you which ones.\n"
@@ -76,55 +77,52 @@ void paramsManagement(int argc, char *argv[], int* optionLog, bool* optionSave ,
 	}
 	*optionLog = NONE;
 	*optionSave = false;
+	*optionLoad = false;
 
 	int indice = 1;
 	while(indice < argc)
 	{
 		if(argv[indice] == std::string("-none"))
-		      *optionLog = NONE;
+		    *optionLog = NONE;
+		else if(argv[indice] == std::string("-some"))
+			*optionLog = SOME;
+		else if(argv[indice] == std::string("-all"))
+			*optionLog = ALL;
+		else if(argv[indice] == std::string("-help"))
+		{
+			*optionLog = ERROR;
+			printHelp();
+		}
+		else if(argv[indice] == std::string("-save"))
+		{
+			*optionSave = true;
+			if(indice == argc - 1)
+			{
+				*optionLog = ERROR;
+				printError();
+				return;
+			}
+			*file = std::string(argv[indice+1]);
+			indice++;
+		}
+		else if(argv[indice] == std::string("-load"))
+		{
+			*optionLoad = true;
+			if(indice == argc - 1)
+			{
+				*optionLog = ERROR;
+				printError();
+				return;
+			}
+			*fileLoad = std::string(argv[indice+1]);
+			indice++;
+		}
 		else
-			if(argv[indice] == std::string("-some"))
-				*optionLog = SOME;
-			else
-				if(argv[indice] == std::string("-all"))
-					*optionLog = ALL;
-				else
-					if(argv[indice] == std::string("-help"))
-					{
-						*optionLog = ERROR;
-						printHelp();
-					}
-					else
-						if(argv[indice] == std::string("-save"))
-						{
-							*optionSave = true;
-							if(indice == argc - 1)
-							{
-								*optionLog = ERROR;
-								printError();
-								return;
-							}
-							*file = std::string(argv[indice+1]);
-							indice++;
-						}
-						else
-							if(argv[indice] == std::string("-load"))
-							{
-								*optionLoad = true;
-								if(indice == argc - 1)
-								{
-									*optionLog = ERROR;
-									printError();
-									return;
-								}
-								*fileLoad = std::string(argv[indice+1]);
-								indice++;
-							}
-						{
-							*optionLog = ERROR;
-							printError();
-							return;
-						}
+		{
+			*optionLog = ERROR;
+			printError();
+			return;
+		}
 		indice++;
 	}
 }
@@ -132,21 +130,22 @@ void paramsManagement(int argc, char *argv[], int* optionLog, bool* optionSave ,
 
 
 
-/*
+
 const std::vector<std::string> explode(const std::string& s, const char& c)
 {
 	std::string buff("");
 	std::vector<std::string> v;
 
-	for(auto n:s)
+	for(auto it = s.begin(); it != s.end(); it++)
 	{
-		if(n != c) buff+=n; else
-		if(n == c && buff != "") { v.push_back(buff); buff = ""; }
+		if(*it != c) buff+=*it; else
+		if(*it == c && buff != "") { v.push_back(buff); buff = ""; }
 	}
-	if(buff != "") v.push_back(buff);
+	if(buff != "")
+		v.push_back(buff);
 
 	return v;
-}*/
+}
 
 
 
@@ -208,44 +207,47 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		std::cout << "not finish yet";
-		return(-1);
-		/*
-
 		// I will use the same time step than the one logged in the file.
 		 std::ifstream fileLoad(fileNameLoad_.c_str(), std::ios::in);  // on ouvre le fichier en lecture
 
 		 if(fileLoad)  // if it succeeded
-
+		 {
 			 // the first line contains the name of the differents values to load.
 			 // We will use them to make them optional to the computation
 			 std::string buffer;  // déclaration d'une chaîne qui contiendra la ligne lue
 			 std::getline(fileLoad, buffer);  // on met dans "contenu" la ligne
-			 std::vector vectHeaders_ = explode(buffer, '\t');
+			 std::vector<std::string> vectHeaders_ = explode(buffer, '\t');
 			 // the first argument is the time. I don't need it so I delete it.
-			 vectHeaders_.pop_front();
+			 if (vectHeaders_.size()){ //check if there any elements in the vector array
+			     vectHeaders_.erase(vectHeaders_.begin()); //erase the firs element
+			 }
 
 			 // an easy idea to find the different variables of the file, we will do the same fonction than formatHeader
 			 // and compare it with the name of the file. (Observation: they are in the same order)
 
 			 // créons tout d'abord une hashmap comportant un string pour le titre de la colonne, et les valeurs qu'on remettra à jour à chaque temps
-			 std::map<std::string, int> valuesLoad_;
+			 //std::map<std::string, int> valuesLoad_;
 
 			 // so now, we can use each line of the file.
-			 std::vector tmpVect_;
+			 std::vector<int> tmpVect_;
+			 int number;
 			 int timeStep;
+			 std::string prefix("");
 			 while(getline(fileLoad, buffer))  // tant que l'on peut mettre la ligne dans "contenu"
 			 {
 				 // we know we have the same number of arguments in the same order.
-				 tmpVect_ = explode(buffer, '\t');
-
+				 //tmpVect_ = explode(buffer, '\t');
+				 std::istringstream iss( buffer );
+				 while ( iss >> number )
+				   tmpVect_.push_back( number );
 				 // the first element is the time again.
-				 timeStep = stoi("3");
+				 timeStep = tmpVect_[0];
 
-				 stringstream ss(tmpVect_.pop_fornt());
-				 int my_res; ss >> my_res;
+				 if (tmpVect_.size()){ //check if there any elements in the vector array
+					 tmpVect_.erase(tmpVect_.begin()); //erase the first element
+				 }
 
-				 r.findingHeaders(header, "", &valuesLoad_ , &tmpVect_);
+				 r.findingHeaders(prefix, vectHeaders_ , tmpVect_);
 
 
 				 // then it is the same than without the optionLoad
@@ -258,23 +260,15 @@ int main(int argc, char *argv[])
 				 printVector(values);
 				 if(optionSave_)
 					 printVector(values, myfile);
-
+				 tmpVect_.clear();
 			 }
-
-
-
-			 r.findingHeaders(header, "", );
-
-
-
-		     fichier.close();  // on ferme le fichier
+		     fileLoad.close();  // on ferme le fichier
 		 }
 		 else
 		 {
 		     std::cerr << "Error I couldn't open the file to load !" << std::endl;
 		     return (-1);
 		 }
-		 */
 	}
 
 
